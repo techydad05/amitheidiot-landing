@@ -2,6 +2,20 @@
   import { onMount } from 'svelte';
 
   onMount(() => {
+        /* ================= THEME TOGGLE ================= */
+        const themeBtn = document.getElementById('themeToggle');
+        function applyTheme() {
+            const dark = document.documentElement.classList.contains('dark');
+            if (themeBtn) themeBtn.textContent = dark ? '🌙' : '☀️';
+        }
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const dark = document.documentElement.classList.toggle('dark');
+                try { localStorage.setItem('amitheidiot-theme', dark ? 'dark' : 'light'); } catch (e) {}
+                applyTheme();
+            });
+        }
+        applyTheme();
 /* ================= COUNTDOWN ================= */
         const LAUNCH = new Date('2026-09-17T09:00:00-04:00'); // Constitution Day
         function tickClock() {
@@ -212,6 +226,71 @@
     --gold: #C9A227;
     --shadow: 8px 8px 0 var(--ink);
 }
+
+/* ============ DARK MODE (default) ============ */
+html.dark {
+    --paper: #16130E;
+    --ink: #F1ECE0;
+    --aegean: #6C8CFF;
+    --blood: #FF5A5F;
+    --gold: #E5C158;
+    --shadow: 8px 8px 0 rgba(0, 0, 0, .55);
+}
+
+html.dark .def-card,
+html.dark .quiz-box,
+html.dark .stat,
+html.dark .mstat {
+    background: #211C12;
+    color: var(--ink);
+}
+
+html.dark .def-pos {
+    color: #B9AE9C;
+}
+
+html.dark .def-card::before {
+    color: #16130E;
+}
+
+html.dark .opt:hover {
+    background: #211C12;
+}
+
+html.dark .thesis p b {
+    background: linear-gradient(transparent 60%, var(--gold) 60%);
+}
+
+/* theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 200;
+    width: 44px;
+    height: 44px;
+    border: 3px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 1.15rem;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform .12s, box-shadow .12s, background .2s, color .2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+}
+
+.theme-toggle:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0 0 0 var(--ink);
+}
+
 
 * {
     margin: 0;
@@ -1316,6 +1395,7 @@ footer .greek {
 </svelte:head>
 
 <!-- TICKER -->
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">🌙</button>
     <div class="ticker" aria-hidden="true">
         <div class="ticker-track" id="tickerTrack">
             <span class="red">⚠ ONLY 1 IN 3 AMERICANS CAN PASS THE CITIZENSHIP TEST</span>
